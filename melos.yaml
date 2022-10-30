@@ -1,0 +1,112 @@
+name: xcallbackurl
+repository: https://github.com/ivoleitao/xcallbackurl
+
+packages:
+  - packages/**
+
+ide:
+  intellij:
+    false
+
+command:
+  bootstrap:
+    usePubspecOverrides: true
+  version:
+    branch: master 
+
+scripts:
+  get:
+    run: |
+      melos exec -c 1 -- \
+        "dart pub get"
+    description: |
+      Run `dart pub get` in all packages.
+
+  upgrade:
+    run: |
+      melos exec -c 1 -- \
+        "dart pub upgrade"
+    description: |
+      Run `dart pub upgrade` in all packages.
+
+  outdated:
+    run: |
+      melos exec -c 1 -- \
+        "dart pub outdated"
+    description: |
+      Run `dart pub outdated` in all packages.
+
+  analyze:
+    run: |
+      melos exec -c 1 -- \
+        "dart analyze . --fatal-infos"
+    description: |
+      Run `dart analyze` in all packages.
+
+  format:
+    run: |
+      melos exec -c 1 -- \
+        "dart format --set-exit-if-changed ."
+    description: |
+      Run `dart format` in all packages.
+  
+  doc:
+    run: |
+      melos exec -- \
+        rm -Rf "doc"
+      melos exec -c 1 -- \
+        "dart pub global run dartdoc ."
+    description: |
+      Generate documentation for all packages.
+
+  test:
+    run: melos run test:vm && melos run test:chrome
+    description: |
+      Run `dart test` in vm and chrome in the selected packages
+  
+  test:vm:
+    run: |
+      melos exec -c 1 -- \
+        "dart test -p vm"
+    description: |
+      Run `dart test -p vm` in the selected packages.
+
+  test:chrome:
+    run: |
+      melos exec -c 1 -- \
+        "dart test -p chrome"
+    description: |
+      Run `dart test -p chome` in the selected packages. 
+
+  coverage:
+    run: melos run coverage:vm && melos run coverage:chrome
+    description: |
+      Run `dart test` in vm and chrome and collects coverage.
+
+  coverage:vm:
+    run: |
+      melos exec -c 1 -- \
+        "dart test -p vm --concurrency=1 --coverage=coverage && dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=lib"
+    description: |
+      Run `dart test -p vm` in the selected packages and collects coverage.
+
+  coverage:chrome:
+    run: |
+      melos exec -c 1 -- \
+        "dart test -p chrome --concurrency=1 --coverage=coverage && dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=lib"
+    description: |
+      Run `dart test -p chrome` in the selected packages and collects coverage.
+
+  verify:
+    run: |
+      melos exec -c 1 --no-private \
+        "dart pub publish --dry-run"
+    description: |
+      Verify package
+
+  codecov:
+    run: |
+      melos exec -c 1 -- \
+        "bash -c 'bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info -F MELOS_PACKAGE_NAME'"
+    description: |
+      Uploads the code coverage to codecov.

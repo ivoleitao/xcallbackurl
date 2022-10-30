@@ -1,0 +1,67 @@
+name: Dart CI
+
+on:
+  schedule:
+    - cron: '*/30 8 * * *'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'melos.yaml'
+      - 'packages/**'
+      - '.github/workflows/dart-ci.yml'
+
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'melos.yaml'
+      - 'packages/**'
+      - '.github/workflows/dart-ci.yml'
+
+jobs:
+  ci:
+    name: Dart CI
+
+    strategy:
+      matrix:
+        host: ['ubuntu-latest']
+        sdk: ['stable']
+
+    runs-on: ${{ matrix.host }}
+
+    steps:
+      - name: Set up dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+
+      - name: Install packages
+        run: |
+          dart pub global activate dartdoc
+          dart pub global activate melos
+
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Bootstrap
+        run: |
+          melos bs
+          
+      - name: Linter
+        run: |
+          melos format
+          melos analyze
+
+      - name: Test
+        run: |
+          melos test
+
+      - name: Documentation
+        run: |
+          melos doc
+
+      - name: Verify
+        run: |
+          melos clean
+          melos verify
