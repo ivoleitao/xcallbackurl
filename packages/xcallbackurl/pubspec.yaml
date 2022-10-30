@@ -1,5 +1,5 @@
 name: xcallbackurl
-version: 1.0.0
+version: 0.1.1
 description: >-
   Base classes that support the construction x-callback-url URL schemas
   for inter-app communication and messaging on Apple’s iOS/Mac platforms.
