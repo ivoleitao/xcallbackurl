@@ -12,7 +12,7 @@ command:
   bootstrap:
     usePubspecOverrides: true
   version:
-    branch: master 
+    branch: develop 
 
 scripts:
   get:
