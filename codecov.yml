@@ -2,11 +2,11 @@ coverage:
   range: 50..100
   status:
     project:
-      default: off
+      default: false
       xcallbackurl:
-        flags: xcallbackurl
+        flags: [xcallbackurl]
       xcallbackurl_bear:
-        flags: xcallbackurl_bear
+        flags: [xcallbackurl_bear]
 
 flags:
   xcallbackurl:
